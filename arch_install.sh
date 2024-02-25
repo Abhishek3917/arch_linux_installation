@@ -35,14 +35,16 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then
     read HOME_format_needed
     if [[ $HOME_format_needed == 'y' ]]; then
         mkfs.ext4 $HOME
-        mount --mkdir -p $HOME /mnt/home
+        mkdir -p /mnt/home
+        mount $HOME /mnt/home
     fi
     mkfs.fat -F 32 $EFI
     mkfs.ext4 $ROOT
     
     echo -e "\nMounting the disk...\n"
     mount $ROOT /mnt
-    mount --mkdir -p $EFI /mnt/boot/efi
+    mkdir -p /mnt/boot/efi
+    mount $EFI /mnt/boot/efi
     echo "----------------------------------------------------------------------------------------------------------"
     echo "---Install essential packages---"
     echo "----------------------------------------------------------------------------------------------------------"
