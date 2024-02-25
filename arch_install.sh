@@ -20,7 +20,7 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then
     echo "Please enter root (/) partition: (example /dev/sda3) "
     read ROOT
     echo "Please enter Home partition: (example /dev/sda2) "
-    echo HOME
+    read HOME
     echo "do u need swap partition: (y/n) "
     read swap_need
     if [[ $swap_need == 'y' ]]; then
@@ -35,14 +35,14 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then
     read HOME_format_needed
     if [[ $HOME_format_needed == 'y' ]]; then
         mkfs.ext4 $HOME
-        mount --mkdir $HOME /mnt/home
+        mount --mkdir -p $HOME /mnt/home
     fi
     mkfs.fat -F 32 $EFI
     mkfs.ext4 $ROOT
     
     echo -e "\nMounting the disk...\n"
     mount $ROOT /mnt
-    mount --mkdir $EFI /mnt/boot/efi
+    mount --mkdir -p $EFI /mnt/boot/efi
     echo "----------------------------------------------------------------------------------------------------------"
     echo "---Install essential packages---"
     echo "----------------------------------------------------------------------------------------------------------"
