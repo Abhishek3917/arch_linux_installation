@@ -18,9 +18,9 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then # checking for u
     echo "----------------------------------------------------------------------------------------------------------"
     echo "Please enter EFI paritition: (example /dev/sda1 or /dev/nvme0n1p1) "
     read EFI
-    echo "Please enter root (/) partition: (example /dev/sda3) "
+    echo "Please enter root (/) partition: (example /dev/sda2) "
     read ROOT
-    echo "Please enter Home partition: (example /dev/sda2) "
+    echo "Please enter Home partition: (example /dev/sda3) "
     read HOME
     echo "do u need swap partition: (y/n) "
     read swap_need
@@ -81,7 +81,13 @@ cat <<EOF > /etc/hosts
 127.0.1.1	arch.localdomain	arch
 EOF
 echo "root user password"
-passwd 
+passwd
+echo "enter the usernmae"
+useradd -m $USER
+usermod -aG wheel,storage,power,audio $USER
+passwd $USER
+#editing the sudeors file to give members of wheel group to get sudo access
+sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 pacman -S grub efibootmgr wpa_supplicant mtools dosfstools linux-headers --noconfirm --needed
 echo "----------------------------------------------------------------------------------------------------------"
 echo "---Inittializing the bootloader---"
@@ -94,8 +100,6 @@ umount -R /mnt
 echo "----------------------------------------------------------------------------------------------------------"
 echo "---BASE INSTALLATION FINISHED---"
 echo "----------------------------------------------------------------------------------------------------------"
-echo "LOGIN:root"
-echo "root_password"
 echo "YOU CAN REBOOT NOW"
 
 
