@@ -82,7 +82,7 @@ cat <<EOF > /etc/hosts
 EOF
 echo "root user password"
 passwd 
-pacman -S grub efibootmgr wpa_supplicant mtools dosfstools linux-headers --noconfirm -needed
+pacman -S grub efibootmgr wpa_supplicant mtools dosfstools linux-headers --noconfirm --needed
 echo "----------------------------------------------------------------------------------------------------------"
 echo "---Inittializing the bootloader---"
 echo "----------------------------------------------------------------------------------------------------------"
