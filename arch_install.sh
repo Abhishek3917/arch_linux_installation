@@ -10,7 +10,8 @@ echo "--------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------" 
 
 echo "checking is system is booted in uefi mode"
-if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then
+
+if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then # checking for uefi
     echo "Systerm is booted in uefi mode, procedding....."
     echo "----------------------------------------------------------------------------------------------------------"
     echo "---USER INPUT---"
@@ -30,6 +31,7 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then
         mkswap $SWAP
         swapon $SWAP
     fi
+    # formating the partion and creating home and efi dir and mounting the partition(root,home,efi)
     echo -e "\nCreating Filesystems...\n"
     echo "do u need FORMAT HOME partition: (y/n) "
     read HOME_format_needed
@@ -45,6 +47,7 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then
     mount $ROOT /mnt
     mkdir -p /mnt/boot/efi
     mount $EFI /mnt/boot/efi
+    # installing the packages 
     echo "----------------------------------------------------------------------------------------------------------"
     echo "---Install essential packages---"
     echo "----------------------------------------------------------------------------------------------------------"
@@ -52,9 +55,52 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then
     echo "----------------------------------------------------------------------------------------------------------"
     echo "-- Setup Dependencies--"
     echo "----------------------------------------------------------------------------------------------------------"
-    pacstrap /mnt networkmanager network-manager-applet wireless_tools nano git --noconfirm --needed
+    pacstrap /mnt networkmanager network-manager-applet wireless_tools nano git reflector --noconfirm --needed
     echo "Generating an fstab file........."
+    # generating the genfstab
     genfstab -U /mnt >> /mnt/etc/fstab
+
+cat <<REALEND > /mnt/next.sh
+
+# setting timezone
+ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
+hwclock --systohc
+#localization
+sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+locale-gen
+#create locale.conf
+echo "LANG=en_US.UTF-8" >> /etc/locale.conf
+echo "----------------------------------------------------------------------------------------------------------"
+echo "---Setting up system---"
+echo "----------------------------------------------------------------------------------------------------------"
+echo "Enter the hostname"
+read HOSTNAME
+echo $HOSTNAME >> /etc/hostname
+cat <<EOF > /etc/hosts
+127.0.0.1	localhost
+::1			localhost
+127.0.1.1	arch.localdomain	arch
+EOF
+echo "root user password"
+read -s password
+passwd $password
+pacman -S grub efibootmgr wpa_supplicant mtools dosfstools linux-headers --no-confirm -needed
+echo "----------------------------------------------------------------------------------------------------------"
+echo "---Inittializing the bootloader---"
+echo "----------------------------------------------------------------------------------------------------------"
+echo "initializing grub"
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+grub-mkconfig -o /boot/grub/grub.cfg
+exit
+umount -R /mnt
+echo "----------------------------------------------------------------------------------------------------------"
+echo "---BASE INSTALLATION FINISHED---"
+echo "----------------------------------------------------------------------------------------------------------"
+echo "LOGIN:root"
+echo "root_password"
+echo "YOU CAN REBOOT NOW"
+REALEND
+arch-chroot /mnt sh next.sh
 else
     echo "System is not booted in uefi mode, Exiting..."
     exit 1
