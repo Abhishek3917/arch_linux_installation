@@ -27,7 +27,6 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then # checking for u
     if [[ $swap_need == 'y' ]]; then
         echo "Please enter SWAP paritition: (example /dev/sda4)"
         read SWAP
-        echo $SWAP
         mkswap $SWAP
         swapon $SWAP
     fi
@@ -60,7 +59,7 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then # checking for u
     # generating the genfstab
     genfstab -U /mnt >> /mnt/etc/fstab
 
-cat <<REALEND > /mnt/next.sh
+cat << 'REALEND' > /mnt/next.sh
 
 # setting timezone
 ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
@@ -82,8 +81,7 @@ cat <<EOF > /etc/hosts
 127.0.1.1	arch.localdomain	arch
 EOF
 echo "root user password"
-read -s password
-passwd $password
+passwd 
 pacman -S grub efibootmgr wpa_supplicant mtools dosfstools linux-headers --no-confirm -needed
 echo "----------------------------------------------------------------------------------------------------------"
 echo "---Inittializing the bootloader---"
@@ -99,7 +97,11 @@ echo "--------------------------------------------------------------------------
 echo "LOGIN:root"
 echo "root_password"
 echo "YOU CAN REBOOT NOW"
+
+
 REALEND
+
+
 arch-chroot /mnt sh next.sh
 else
     echo "System is not booted in uefi mode, Exiting..."
