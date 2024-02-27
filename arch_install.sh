@@ -85,7 +85,7 @@ passwd
 echo "enter the usernmae"
 read USER
 useradd -m $USER
-usermod -aG wheel,storage,power,audio $USER
+usermod -m -G wheel,storage,power,audio $USER
 passwd $USER
 #editing the sudeors file to give members of wheel group to get sudo access
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
@@ -96,7 +96,8 @@ echo "--------------------------------------------------------------------------
 echo "initializing grub"
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
-exit
+systemctl start NetworkManager
+systemctl enable NetworkManager
 umount -R /mnt
 echo "----------------------------------------------------------------------------------------------------------"
 echo "---BASE INSTALLATION FINISHED---"
