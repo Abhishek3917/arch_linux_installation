@@ -1,6 +1,5 @@
 # Arch Linux Installation Script
 
-## Overview
 This script automates the Arch Linux installation process, focusing on systems booted in UEFI mode. It guides the user through essential steps such as partitioning, filesystem creation, package installation, and basic system configuration.
 
 ## Features
@@ -37,3 +36,6 @@ sh arch_install.sh
 • Always review and understand the script before running it on your system.
 • Customize the script according to your preferences and requirements.
 • timezone set default to Asia/kolkata
+
+# warning
+• This script is still in development stage
