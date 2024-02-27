@@ -83,6 +83,7 @@ EOF
 echo "root user password"
 passwd
 echo "enter the usernmae"
+read USER
 useradd -m $USER
 usermod -aG wheel,storage,power,audio $USER
 passwd $USER
