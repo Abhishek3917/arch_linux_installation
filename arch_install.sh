@@ -78,7 +78,7 @@ echo $HOSTNAME >> /etc/hostname
 cat <<EOF > /etc/hosts
 127.0.0.1	localhost
 ::1			localhost
-127.0.1.1	arch.localdomain	arch
+127.0.1.1	$HOSTNAME.localdomain	$HOSTNAME
 EOF
 echo "root user password"
 passwd
@@ -98,6 +98,20 @@ grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 systemctl start NetworkManager
 systemctl enable NetworkManager
+echo "DO U NEED TO CLONE POST INSTALLTION SCRIPT (y/n): "
+read CONFIRM_post
+
+if [[ $CONFIRM_post == 'y' ]]; then
+    cd /mnt/home
+    https://github.com/Abhishek3917/arch_linux_installation.git
+
+    echo \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+    echo "git is cloned after reboot login as user and navigate to home then run post_installation script"
+    echo \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+
+fi
+cd ..
+cd ..
 umount -R /mnt
 echo "----------------------------------------------------------------------------------------------------------"
 echo "---BASE INSTALLATION FINISHED---"

@@ -41,16 +41,16 @@ echo "3.nvdia"
 read GRAPHICS
 if [[ $GRAPHICS == '1' ]]; then
 
-sudo pacman -S xf86-video-amdgpu
+sudo pacman -S xf86-video-amdgpu --noconfirm --needed
 
 
 elif [[ $GRAPHICS == '2' ]]; then
 
-sudo pacman -S xf86-video-intel
+sudo pacman -S xf86-video-intel --noconfirm --needed
 
 elif [[ $GRAPHICS == '3' ]]; then
 
-sudo pacman -S nvdia nvdia-utils
+sudo pacman -S nvdia nvdia-utils --noconfirm --needed
 
 else 
    echo "INVALID OPTION. TERMINATING........."
@@ -58,12 +58,12 @@ else
 fi
 
 echo "PLEASE CHOOSE UR DESKTOP ENVIRONMENT"
-echo "1.BSPWM :-is a tiling window manager that represents windows as the leaves of a full binary tree. bspwm supports multiple monitors and is configured and controlled through messages "
+echo "1.BSPWM :-is a tiling window manager that represents windows as the leaves of a full binary tree. "
 echo "2.gnome :-is a desktop environment that aims to be simple and easy to use"
 read user_input
 if [[ $user_input == '1' ]]; then
 
-   sudo pacman -S xorg xorg-xinit bspwm sxhkd dmenu nitrogen picom xfce4-terminal chromium arandr
+   sudo pacman -S xorg xorg-xinit bspwm sxhkd dmenu nitrogen picom xfce4-terminal chromium arandr --noconfirm --needed
    
    if [ ! -d .config ]; then
 
@@ -75,9 +75,12 @@ if [[ $user_input == '1' ]]; then
    cp /usr/share/doc/bspwm/examples/bspwmrc .config/bspwm/
    cp /usr/share/doc/bspwm/examples/sxhkdrc .config/sxhkd/
 
+   sed -i 's/urxvt/xfce4-terminal/' .config/sxhkd/sxhkdrc
+   cp /etc/X11/xinit/xinitrc .xinitrc
+   
 elif [[ $user_input == '2' ]]; then
 
-   sudo pacman -S gdm gnome
+   sudo pacman -S gdm gnome --noconfirm --needed
    systemctl enable gdm
    
 else
