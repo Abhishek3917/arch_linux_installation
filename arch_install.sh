@@ -85,7 +85,7 @@ passwd
 echo "enter the usernmae"
 read USER
 useradd -m $USER
-usermod -m -G wheel,storage,power,audio $USER
+usermod -aG wheel,storage,power,audio $USER
 passwd $USER
 #editing the sudeors file to give members of wheel group to get sudo access
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
