@@ -25,7 +25,7 @@ This script automates the Arch Linux installation process, focusing on systems b
     - Note the partition names for EFI, root, home, and swap.
 4. **Download the Script:**
     ```bash
-    curl https://raw.githubusercontent.com/YourGitHubUsername/arch_linux_installation/main/arch_install.sh -o arch_install.sh
+    curl https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/arch_install.sh -o arch_install.sh
     ```
 5. **Run the Script:**
     ```bash
