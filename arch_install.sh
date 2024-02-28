@@ -37,7 +37,6 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then # checking for u
     if [[ $HOME_format_needed == 'y' ]]; then
         mkfs.ext4 $HOME
         mkdir -p /mnt/home
-        mount $HOME /mnt/home
     fi
     mkfs.fat -F 32 $EFI
     mkfs.ext4 $ROOT
@@ -46,6 +45,7 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then # checking for u
     mount $ROOT /mnt
     mkdir -p /mnt/boot/efi
     mount $EFI /mnt/boot/efi
+    mount $HOME /mnt/home
     # installing the packages 
     echo "----------------------------------------------------------------------------------------------------------"
     echo "---Install essential packages---"
@@ -101,15 +101,6 @@ systemctl enable NetworkManager
 echo "DO U NEED TO CLONE POST INSTALLTION SCRIPT (y/n): "
 read CONFIRM_post
 
-if [[ $CONFIRM_post == 'y' ]]; then
-    cd /mnt/home
-    https://github.com/Abhishek3917/arch_linux_installation.git
-
-    echo \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
-    echo "git is cloned after reboot login as user and navigate to home then run post_installation script"
-    echo \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
-
-fi
 cd ..
 cd ..
 umount -R /mnt
@@ -121,6 +112,15 @@ echo "YOU CAN REBOOT NOW"
 
 REALEND
 
+if [[ $CONFIRM_post == 'y' ]]; then
+    cd /mnt/home
+    https://github.com/Abhishek3917/arch_linux_installation.git
+
+    echo \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+    echo "git is cloned after reboot login as user and navigate to home then run post_installation script"
+    echo \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+
+fi
 
 arch-chroot /mnt sh next.sh
 else

@@ -51,7 +51,7 @@ sudo pacman -S xf86-video-intel --noconfirm --needed
 
 elif [[ $GRAPHICS == '3' ]]; then
 
-sudo pacman -S nvdia nvdia-utils --noconfirm --needed
+sudo pacman -S nvidia nvidia-utils --noconfirm --needed
 
 else 
    echo "INVALID OPTION. TERMINATING........."
