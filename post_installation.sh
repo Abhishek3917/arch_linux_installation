@@ -34,6 +34,7 @@ else
     fi
 fi
 echo "----------------------------------------------------------------------------------------------------------"
+# Install graphics drivers based on user input
 echo "select a graphics driver"
 echo "1.amd"
 echo "2.intel"
@@ -61,6 +62,9 @@ echo "PLEASE CHOOSE UR DESKTOP ENVIRONMENT"
 echo "1.BSPWM :-is a tiling window manager that represents windows as the leaves of a full binary tree. "
 echo "2.gnome :-is a desktop environment that aims to be simple and easy to use"
 read user_input
+
+# Install desktop environment based on user input
+
 if [[ $user_input == '1' ]]; then
 
    sudo pacman -S xorg xorg-xinit bspwm sxhkd dmenu nitrogen picom xfce4-terminal chromium arandr --noconfirm --needed
@@ -77,6 +81,7 @@ if [[ $user_input == '1' ]]; then
 
    sed -i 's/urxvt/xfce4-terminal/' .config/sxhkd/sxhkdrc
    cp /etc/X11/xinit/xinitrc .xinitrc
+   sed -i 's/vsync = true;/#vsync = true;/' /etc/xdg/picom.conf
    
 elif [[ $user_input == '2' ]]; then
 
