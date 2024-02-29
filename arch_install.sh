@@ -36,16 +36,20 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then # checking for u
     read HOME_format_needed
     if [[ $HOME_format_needed == 'y' ]]; then
         mkfs.ext4 $HOME
-        mkdir -p /mnt/home
+        mkdir /mnt/home/
     fi
     mkfs.fat -F 32 $EFI
     mkfs.ext4 $ROOT
     
     echo -e "\nMounting the disk...\n"
     mount $ROOT /mnt
-    mkdir -p /mnt/boot/efi
-    mount $EFI /mnt/boot/efi
+    mkdir /mnt/boot/efi
+    mount $EFI -p /mnt/boot/efi
     mount $HOME /mnt/home
+    
+    # generating the genfstab
+    genfstab -U /mnt >> /mnt/etc/fstab
+
     # installing the packages 
     echo "----------------------------------------------------------------------------------------------------------"
     echo "---Install essential packages---"
@@ -56,8 +60,7 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then # checking for u
     echo "----------------------------------------------------------------------------------------------------------"
     pacstrap /mnt networkmanager network-manager-applet wireless_tools nano git reflector --noconfirm --needed
     echo "Generating an fstab file........."
-    # generating the genfstab
-    genfstab -U /mnt >> /mnt/etc/fstab
+
 
 cat << 'REALEND' > /mnt/next.sh
 
@@ -100,9 +103,6 @@ systemctl start NetworkManager
 systemctl enable NetworkManager
 echo "DO U NEED TO CLONE POST INSTALLTION SCRIPT (y/n): "
 read CONFIRM_post
-
-cd ..
-cd ..
 umount -R /mnt
 echo "----------------------------------------------------------------------------------------------------------"
 echo "---BASE INSTALLATION FINISHED---"

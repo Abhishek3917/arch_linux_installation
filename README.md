@@ -45,3 +45,4 @@ This script automates the Arch Linux installation process, focusing on systems b
 
 # Warning
 - This script is still in the development stage.
+- contain bugs related to mount home dir 
