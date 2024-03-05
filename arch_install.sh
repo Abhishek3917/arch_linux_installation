@@ -43,8 +43,8 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then # checking for u
     
     echo -e "\nMounting the disk...\n"
     mount $ROOT /mnt
-    mkdir /mnt/boot/efi
-    mount $EFI -p /mnt/boot/efi
+    mkdir -p /mnt/boot/efi
+    mount $EFI /mnt/boot/efi
     mount $HOME /mnt/home
     
     # generating the genfstab
