@@ -125,4 +125,4 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then # checking for u
 # else
 #     echo "System is not booted in uefi mode, Exiting..."
 #     exit 1
-# fi
+fi
