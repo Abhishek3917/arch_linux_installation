@@ -57,11 +57,11 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then # checking for u
     echo "----------------------------------------------------------------------------------------------------------"
     pacstrap /mnt networkmanager network-manager-applet wireless_tools nano git reflector --noconfirm --needed
     echo "Generating an fstab file........."
+    genfstab -U /mnt >> /mnt/etc/fstab
 
 cat << 'REALEND' > /mnt/next.sh
 
 # generating the genfstab
-genfstab -U /mnt >> /mnt/etc/fstab
 
 # setting timezone
 ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
