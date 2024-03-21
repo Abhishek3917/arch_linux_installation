@@ -81,7 +81,7 @@ if [[ $user_input == '1' ]]; then
 
    sed -i 's/urxvt/xfce4-terminal/' .config/sxhkd/sxhkdrc
    cp /etc/X11/xinit/xinitrc .xinitrc
-   sed -i 's/vsync = true;/#vsync = true;/' /etc/xdg/picom.conf
+   sudo sed -i 's/vsync = true;/#vsync = true;/' /etc/xdg/picom.conf
    
 elif [[ $user_input == '2' ]]; then
 
