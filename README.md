@@ -2,6 +2,10 @@
 
 This script automates the Arch Linux installation process, focusing on systems booted in UEFI mode. It guides the user through essential steps such as partitioning, filesystem creation, package installation, and basic system configuration.
 
+## Security Disclaimer
+
+This script is for educational purposes only. It is not intended for use in a production environment without proper security hardening specific to that environment. Running user-provided scripts can be risky. Always review and understand the script before running it on your system.
+
 ## Features
 
 - UEFI mode detection and compatibility.
@@ -44,10 +48,13 @@ This script automates the Arch Linux installation process, focusing on systems b
     - After the base installation is complete, follow the instructions to reboot.
     - Optionally, clone post-installation scripts and execute them as directed.
 
+## Post-Installation
+
+- this script is in its development stage 
+
 ## Notes
 
 - This script assumes a basic level of familiarity with the Arch Linux installation process.
-- Always review and understand the script before running it on your system.
 - Customize the script according to your preferences and requirements.
 - Timezone set default to Asia/Kolkata.
 - Check `/mnt/etc/fstab` if the home partition is not present. Add manually by:
