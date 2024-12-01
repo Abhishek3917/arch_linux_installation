@@ -28,16 +28,16 @@ arch_install() {
     read ROOT
     echo "Please enter Home partition: (example /dev/sda3) "
     read HOME
-    echo "do u need swap partition: (y/n) "
-    read swap_need
+    # echo "do u need swap partition: (y/n) "
+    # read swap_need
 
-    if [[ $swap_need == 'y' ]]; then
-        echo "Please enter SWAP paritition: (example /dev/sda4)"
-        read SWAP
-        sleep_()
-        mkswap $SWAP
-        swapon $SWAP
-    fi
+    # if [[ $swap_need == 'y' ]]; then
+    #     echo "Please enter SWAP paritition: (example /dev/sda4)"
+    #     read SWAP
+    #     sleep_()
+    #     mkswap $SWAP
+    #     swapon $SWAP
+    # fi
 
     # formating the partion and creating home and efi dir and mounting the partition(root,home,efi)
     echo -e "\nCreating Filesystems...\n"
