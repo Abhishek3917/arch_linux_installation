@@ -21,9 +21,10 @@ if check_network; then
 else
     echo "network is down"
     exit 1
+fi
 # checking for uefi
 log "Checking if the system is booted in UEFI mode..."
-if [[ -d /sys/firmware/efi/fw_platform_size ]]; then 
+if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then 
     log "System is booted in UEFI mode, proceeding..."
     echo "----------------------------------------------------------------------------------------------------------"
     echo "---USER INPUT---"
@@ -45,6 +46,7 @@ if [[ -d /sys/firmware/efi/fw_platform_size ]]; then
     # fi
 
     # formating the partion and creating home and efi dir and mounting the partition(root,home,efi)
+    set -x
     echo -e "\nCreating Filesystems...\n"
     echo "do u need to FORMAT HOME partition: (y/n) "
     read HOME_format_needed
@@ -71,6 +73,9 @@ if [[ -d /sys/firmware/efi/fw_platform_size ]]; then
     mkdir /mnt/home/
     mount $HOME /mnt/home/
 
+    log "Checking mounted partitions..."
+    mount | grep /mnt | tee -a "$LOGFILE"
+
     # installing the packages 
 
     log "Installing base packages..."
@@ -80,6 +85,9 @@ if [[ -d /sys/firmware/efi/fw_platform_size ]]; then
     log "Generating fstab..."
     
     genfstab -U /mnt >> /mnt/etc/fstab
+    
+    log "fstab content:"
+    cat /mnt/etc/fstab | tee -a "$LOGFILE"
 
 log "Preparing next stage script..."
 cat << 'REALEND' > /mnt/next.sh
@@ -87,7 +95,7 @@ cat << 'REALEND' > /mnt/next.sh
 # setting timezone
 set_timezone() {
     echo "Available timezones:"
-    timedatectl list-timezones | less
+    timedatectl list-timezones | cat
 
     echo "Enter your timezone (e.g., Asia/Kolkata):"
     read TIMEZONE
