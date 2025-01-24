@@ -46,7 +46,7 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then
     # fi
 
     # formating the partion and creating home and efi dir and mounting the partition(root,home,efi)
-    set -x
+    
     echo -e "\nCreating Filesystems...\n"
     echo "do u need to FORMAT HOME partition: (y/n) "
     read HOME_format_needed
@@ -92,10 +92,17 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then
 log "Preparing next stage script..."
 cat << 'REALEND' > /mnt/next.sh
 
+echo "----------------------------------------------------------------------------------------------------------"
+echo "-- Setup Dependencies--"
+echo "----------------------------------------------------------------------------------------------------------"
+pacman -S networkmanager network-manager-applet wireless_tools git reflector base-devel --noconfirm --needed
+pacman -S grub efibootmgr wpa_supplicant mtools dosfstools linux-headers --noconfirm --needed
+echo "----------------------------------------------------------------------------------------------------------"
+
 # setting timezone
 set_timezone() {
     echo "Available timezones:"
-    timedatectl list-timezones | cat
+    timedatectl list-timezones | less
 
     echo "Enter your timezone (e.g., Asia/Kolkata):"
     read TIMEZONE
@@ -123,7 +130,7 @@ else
     echo "Unable to detect timezone automatically."
     set_timezone
 fi
-ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
+
 hwclock --systohc
 #localization
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
@@ -150,12 +157,7 @@ usermod -aG wheel,storage,power,audio $USER
 passwd $USER
 #editing the sudeors file to give members of wheel group to get sudo access
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
-echo "----------------------------------------------------------------------------------------------------------"
-echo "-- Setup Dependencies--"
-echo "----------------------------------------------------------------------------------------------------------"
-pacman -S networkmanager network-manager-applet wireless_tools git reflector base-devel --noconfirm --needed
-pacman -S grub efibootmgr wpa_supplicant mtools dosfstools linux-headers --noconfirm --needed
-echo "----------------------------------------------------------------------------------------------------------"
+
 echo "---Inittializing the bootloader---"
 echo "----------------------------------------------------------------------------------------------------------"
 echo "initializing grub"
