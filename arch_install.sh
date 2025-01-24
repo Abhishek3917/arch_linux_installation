@@ -35,15 +35,17 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then
     read -r ROOT
     echo "Please enter Home partition: (example /dev/sda3) "
     read -r HOME
-    # echo "do u need swap partition: (y/n) "
-    # read swap_need
+    echo "do u need swap partition: (y/n) "
+    read -r swap_need
 
-    # if [[ $swap_need == 'y' ]]; then
-    #     echo "Please enter SWAP paritition: (example /dev/sda4)"
-    #     read SWAP
-    #     mkswap $SWAP
-    #     swapon $SWAP
-    # fi
+    if [[ $swap_need == 'y' ]]; then
+        echo "Please enter SWAP paritition: (example /dev/sda4)"
+        read -r SWAP
+        log "creating swap partion..."
+        mkswap $SWAP
+        swapon $SWAP      
+        
+    fi
 
     # formating the partion and creating home and efi dir and mounting the partition(root,home,efi)
     
@@ -96,7 +98,7 @@ echo "--------------------------------------------------------------------------
 echo "-- Setup Dependencies--"
 echo "----------------------------------------------------------------------------------------------------------"
 pacman -S networkmanager network-manager-applet wireless_tools git reflector base-devel --noconfirm --needed
-pacman -S grub efibootmgr wpa_supplicant mtools dosfstools linux-headers --noconfirm --needed
+pacman -S grub efibootmgr wpa_supplicant mtools dosfstools linux-headers less --noconfirm --needed
 echo "----------------------------------------------------------------------------------------------------------"
 
 # setting timezone
@@ -167,6 +169,9 @@ systemctl start NetworkManager
 systemctl enable NetworkManager
 echo "DO U NEED TO CLONE POST INSTALLTION SCRIPT (y/n): "
 read CONFIRM_post
+if [[ $CONFIRM_post == 'y' ]]; then
+curl -o /mnt/home/$USER/post_installation.sh https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/arch_install.sh/post_installation.sh 
+fi
 echo "----------------------------------------------------------------------------------------------------------"
 echo "---BASE INSTALLATION FINISHED---"
 echo "----------------------------------------------------------------------------------------------------------"
