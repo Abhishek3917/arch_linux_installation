@@ -9,6 +9,10 @@ echo "--------------------------------------------------------------------------
   #####   ####      ####    ###  ##            ####    ##  ##   ######      ###    #####    ####     ####   
 ----------------------------------------------------------------------------------------------------------" 
 LOGFILE="/var/log/myscript.log"
+
+trap 'echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR on line $LINENO: Command failed" | tee -a "$LOGFILE"' ERR
+set -e  # Exit immediately if any command exits with a non-zero status
+
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOGFILE"
 }
