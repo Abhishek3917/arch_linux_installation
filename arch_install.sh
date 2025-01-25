@@ -16,20 +16,52 @@ set -e  # Exit immediately if any command exits with a non-zero status
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOGFILE"
 }
+
 check_network() {
     ping -c 1 8.8.8.8 > /dev/null 2>&1
     return $?
 }
+
+arch_check() {
+    if [[ ! -e /etc/arch-release ]]; then
+        echo -ne "ERROR! This script must be run in Arch Linux!\n"
+        exit 0
+    fi
+}
+
 if check_network; then
     echo "network is up"
 else
     echo "network is down"
     exit 1
 fi
-# checking for uefi
-log "Checking if the system is booted in UEFI mode..."
-if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then 
+
+
+
+efi_check(){
+    if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then
+    log "Checking if the system is booted in UEFI mode..."
     log "System is booted in UEFI mode, proceeding..."
+    return $?
+    else
+    echo "System is not booted in uefi mode, Exiting..."
+    exit 1
+    fi
+       
+} 
+
+background_checks() {
+    network_check
+    log "distro_verification"
+    arch_check
+    
+    
+}
+
+if efi_check; then
+
+    background_checks     
+
     echo "----------------------------------------------------------------------------------------------------------"
     echo "---USER INPUT---"
     echo "----------------------------------------------------------------------------------------------------------"
@@ -98,6 +130,9 @@ if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then
 log "Preparing next stage script..."
 cat << 'REALEND' > /mnt/next.sh
 
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
+}sh
 echo "----------------------------------------------------------------------------------------------------------"
 echo "-- Setup Dependencies--"
 echo "----------------------------------------------------------------------------------------------------------"
@@ -138,43 +173,60 @@ else
 fi
 
 hwclock --systohc
+
 #localization
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
+
 #create locale.conf
 echo "LANG=en_US.UTF-8" >> /etc/locale.conf
+
 echo "----------------------------------------------------------------------------------------------------------"
 echo "---Setting up system---"
 echo "----------------------------------------------------------------------------------------------------------"
+
 echo "Enter the hostname"
 read HOSTNAME
+
 echo $HOSTNAME >> /etc/hostname
+
 cat <<EOF > /etc/hosts
 127.0.0.1	localhost
 ::1			localhost
 127.0.1.1	$HOSTNAME.localdomain	$HOSTNAME
 EOF
+
 echo "root user password"
 passwd
 echo "enter the usernmae"
 read USER
+
 useradd -m $USER
 usermod -aG wheel,storage,power,audio $USER
 passwd $USER
+
 #editing the sudeors file to give members of wheel group to get sudo access
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
 echo "---Inittializing the bootloader---"
 echo "----------------------------------------------------------------------------------------------------------"
 echo "initializing grub"
+
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
+
 systemctl start NetworkManager
 systemctl enable NetworkManager
+
 echo "DO U NEED TO CLONE POST INSTALLTION SCRIPT (y/n): "
 read CONFIRM_post
-if [[ $CONFIRM_post == 'y' ]]; then
-curl -o /mnt/home/$USER/post_installation.sh https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/arch_install.sh/post_installation.sh 
+
+if [[ $CONFIRM_post == 'y' || $CONFIRM_post == 'Y' ]]; then
+curl -o /home/$USER/post_installation.sh https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/post_installation.sh
+log "the post_installation script is cloned"
+log "U are safe to reboot "
+log "---BASE INSTALLATION FINISHED---"
+exit 1
 fi
 echo "----------------------------------------------------------------------------------------------------------"
 echo "---BASE INSTALLATION FINISHED---"
@@ -185,7 +237,5 @@ REALEND
 log "Chrooting into the new system..."
 arch-chroot /mnt sh next.sh
 log "Installation complete!"
-else
-    echo "System is not booted in uefi mode, Exiting..."
-    exit 1
+
 fi
