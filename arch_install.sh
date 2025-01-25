@@ -17,9 +17,13 @@ log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOGFILE"
 }
 
-check_network() {
+network_check() {
     ping -c 1 8.8.8.8 > /dev/null 2>&1
-    return $?
+    echo "network is up"
+else
+    echo "network is down"
+    exit 1
+fi
 }
 
 arch_check() {
@@ -29,12 +33,7 @@ arch_check() {
     fi
 }
 
-if check_network; then
-    echo "network is up"
-else
-    echo "network is down"
-    exit 1
-fi
+
 
 
 
@@ -129,6 +128,7 @@ if efi_check; then
 
 log "Preparing next stage script..."
 cat << 'REALEND' > /mnt/next.sh
+set -e  # Exit immediately if any command exits with a non-zero status
 
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
