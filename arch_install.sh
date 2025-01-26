@@ -21,7 +21,7 @@ log() {
 network_check() {
     if ping -c 1 8.8.8.8 > /dev/null 2>&1; then
     echo "network is up"
-    return $?
+    
     else
     echo "network is down"
     exit 1
@@ -36,14 +36,11 @@ arch_check() {
 }
 
 
-
-
-
 efi_check(){
     if cat /sys/firmware/efi/fw_platform_size >/dev/null 2>&1; then
     log "Checking if the system is booted in UEFI mode..."
     log "System is booted in UEFI mode, proceeding..."
-    return $?
+    
     else
     echo "System is not booted in uefi mode, Exiting..."
     exit 1
@@ -52,6 +49,7 @@ efi_check(){
 } 
 
 background_checks() {
+    efi_check
     network_check
     log "distro_verification"
     arch_check
@@ -59,10 +57,11 @@ background_checks() {
     
 }
 
-if efi_check; then
-
     background_checks     
+DiskOperations() {
+    local EFI ROOT HOME SWAP
 
+    DiskOperations::get_user_input(){
     echo "----------------------------------------------------------------------------------------------------------"
     echo "---USER INPUT---"
     echo "----------------------------------------------------------------------------------------------------------"
@@ -83,7 +82,9 @@ if efi_check; then
         swapon $SWAP      
         
     fi
+    }
 
+    DiskOperations::format_and_mount(){
     # formating the partion and creating home and efi dir and mounting the partition(root,home,efi)
     
     echo -e "\nCreating Filesystems...\n"
@@ -114,7 +115,9 @@ if efi_check; then
 
     log "Checking mounted partitions..."
     mount | grep /mnt | tee -a "$LOGFILE"
+    }
 
+    DiskOperations::install_base_packages(){
     # installing the packages 
 
     log "Installing base packages..."
@@ -127,7 +130,8 @@ if efi_check; then
     
     log "fstab content:"
     cat /mnt/etc/fstab | tee -a "$LOGFILE"
-
+    }
+    DiskOperations::prepare_arc_chroot(){
 log "Preparing next stage script..."
 cat << 'REALEND' > /mnt/next.sh
 set -e  # Exit immediately if any command exits with a non-zero status
@@ -236,8 +240,9 @@ echo "--------------------------------------------------------------------------
 echo "YOU CAN REBOOT NOW"
 
 REALEND
+    
 log "Chrooting into the new system..."
 arch-chroot /mnt sh next.sh
 log "Installation complete!"
+    }
 
-fi
