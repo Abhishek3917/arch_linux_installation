@@ -10,7 +10,8 @@ echo "--------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------" 
 LOGFILE="/var/log/myscript.log"
 
-trap 'echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR on line $LINENO: Command failed" | tee -a "$LOGFILE"' ERR
+trap "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] ERROR on line $LINENO: Command failed\" | tee -a \"$LOGFILE\"" ERR
+
 set -e  # Exit immediately if any command exits with a non-zero status
 
 log() {
@@ -18,7 +19,7 @@ log() {
 }
 
 network_check() {
-    ping -c 1 8.8.8.8 > /dev/null 2>&1
+    if ping -c 1 8.8.8.8 > /dev/null 2>&1; then
     echo "network is up"
 else
     echo "network is down"
@@ -132,7 +133,7 @@ set -e  # Exit immediately if any command exits with a non-zero status
 
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
-}sh
+  }
 echo "----------------------------------------------------------------------------------------------------------"
 echo "-- Setup Dependencies--"
 echo "----------------------------------------------------------------------------------------------------------"
@@ -158,7 +159,7 @@ set_timezone() {
 }
 auto_timezone=$(curl -s https://ipapi.co/timezone)
 
-if [[ -n $auto_timezone ]]; then
+if [[ -n $auto_timezone ]]; pon
     echo "Detected timezone: $auto_timezone. Do you want to use this? (y/n)"
     read -r choice
     if [[ $choice == "y" || $choice == "Y" ]]; then
