@@ -21,7 +21,7 @@ log() {
 network_check() {
     if ping -c 1 8.8.8.8 > /dev/null 2>&1; then
     echo "network is up"
-
+    
     else
     echo "network is down"
     exit 1
@@ -57,12 +57,12 @@ background_checks() {
     
 }
 
-background_checks     
+     
 DiskOperations() 
 {
     local EFI ROOT HOME SWAP
 
-    DiskOperations::get_user_input(){
+    get_user_input(){
     echo "----------------------------------------------------------------------------------------------------------"
     echo "---USER INPUT---"
     echo "----------------------------------------------------------------------------------------------------------"
@@ -85,7 +85,7 @@ DiskOperations()
     fi
     }
 
-    DiskOperations::format_and_mount(){
+    format_and_mount(){
     # formating the partion and creating home and efi dir and mounting the partition(root,home,efi)
     
     echo -e "\nCreating Filesystems...\n"
@@ -118,7 +118,7 @@ DiskOperations()
     mount | grep /mnt | tee -a "$LOGFILE"
     }
 
-    DiskOperations::install_base_packages(){
+    install_base_packages(){
     # installing the packages 
 
     log "Installing base packages..."
@@ -132,7 +132,7 @@ DiskOperations()
     log "fstab content:"
     cat /mnt/etc/fstab | tee -a "$LOGFILE"
     }
-    DiskOperations::prepare_arc_chroot(){
+    prepare_arc_chroot(){
 log "Preparing next stage script..."
 cat << 'REALEND' > /mnt/next.sh
 set -e  # Exit immediately if any command exits with a non-zero status
@@ -246,12 +246,15 @@ log "Chrooting into the new system..."
 arch-chroot /mnt sh next.sh
 log "Installation complete!"
  }
+ get_user_input
+ format_and_mount
+ install_base_packages
+ prepare_arc_chroot
 }
  main()
  {
     background_checks
     DiskOperations
-    # DiskOperations::execute
  }
 
 main
