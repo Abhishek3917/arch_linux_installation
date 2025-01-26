@@ -21,7 +21,7 @@ log() {
 network_check() {
     if ping -c 1 8.8.8.8 > /dev/null 2>&1; then
     echo "network is up"
-        
+
     else
     echo "network is down"
     exit 1
@@ -249,7 +249,9 @@ log "Installation complete!"
 }
  main()
  {
+    background_checks
     DiskOperations
-    DiskOperations::execute
+    # DiskOperations::execute
  }
 
+main
