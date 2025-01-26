@@ -21,7 +21,7 @@ log() {
 network_check() {
     if ping -c 1 8.8.8.8 > /dev/null 2>&1; then
     echo "network is up"
-    
+        
     else
     echo "network is down"
     exit 1
@@ -57,8 +57,9 @@ background_checks() {
     
 }
 
-    background_checks     
-DiskOperations() {
+background_checks     
+DiskOperations() 
+{
     local EFI ROOT HOME SWAP
 
     DiskOperations::get_user_input(){
@@ -244,5 +245,11 @@ REALEND
 log "Chrooting into the new system..."
 arch-chroot /mnt sh next.sh
 log "Installation complete!"
-    }
+ }
+}
+ main()
+ {
+    DiskOperations
+    DiskOperations::execute
+ }
 
