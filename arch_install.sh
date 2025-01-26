@@ -21,7 +21,8 @@ log() {
 network_check() {
     if ping -c 1 8.8.8.8 > /dev/null 2>&1; then
     echo "network is up"
-else
+    return $?
+    else
     echo "network is down"
     exit 1
 fi
@@ -159,7 +160,7 @@ set_timezone() {
 }
 auto_timezone=$(curl -s https://ipapi.co/timezone)
 
-if [[ -n $auto_timezone ]]; pon
+if [[ -n $auto_timezone ]]; then
     echo "Detected timezone: $auto_timezone. Do you want to use this? (y/n)"
     read -r choice
     if [[ $choice == "y" || $choice == "Y" ]]; then
