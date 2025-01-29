@@ -1,23 +1,12 @@
 # Arch Linux Installation Script
 
-This script automates the Arch Linux installation process, focusing on systems booted in UEFI mode. It guides the user through essential steps such as partitioning, filesystem creation, package installation, and basic system configuration.
+This script automates the installation of base Arch Linux on systems booted in UEFI mode. It simplifies the installation process by handling partitioning, formatting, package installation, and basic system configuration.
 
 ## Security Disclaimer
 
-This script is for educational purposes only. It is not intended for use in a production environment without proper security hardening specific to that environment. Running user-provided scripts can be risky. Always review and understand the script before running it on your system.
+Always review and understand the script before executing it on your system.
 
-## Features
-
-- UEFI mode detection and compatibility.
-- User-friendly prompts for essential information (EFI partition, root partition, etc.).
-- Automatic filesystem creation and mounting.
-- Base system and essential packages installation.
-- Timezone and localization configuration.
-- Hostname and user account setup.
-- GRUB bootloader installation and configuration.
-- NetworkManager activation.
-
-## Getting Started
+## Prerequisites
 
 1. **Boot into Arch Linux Installation Media:**
     - Create a bootable USB or CD with the Arch Linux installation image.
@@ -25,11 +14,12 @@ This script is for educational purposes only. It is not intended for use in a pr
 
 2. **Identify Disk Partitions:**
     - Run `fdisk -l` to list available disk partitions.
-    - Identify the target disk for installation (e.g., /dev/sdX).
+    - Identify the target disk for installation (e.g., /dev/sdX). 
 
 3. **Create Partitions:**
     - Use a partitioning tool (e.g., cfdisk, fdisk, parted) to create partitions on the target disk.
-    - Note the partition names for EFI, root, home, and swap.
+    - Example: Use fdisk /dev/sdX for creating partitions.
+    - Note the partition names for EFI, root, home, and swap (optional).
 
 4. **Download the Script:**
     ```bash
@@ -53,11 +43,12 @@ This script is for educational purposes only. It is not intended for use in a pr
 - this script is in its development stage 
 
 ## Notes
-
-- This script assumes a basic level of familiarity with the Arch Linux installation process.
-- Customize the script according to your preferences and requirements.
-- Timezone set default to Asia/Kolkata.
-- Check `/mnt/etc/fstab` if the home partition is not present. Add manually by:
+### Partitioning and Formatting
+- The script assumes that all partitions, including root and home, use the ext4 filesystem format.
+### UEFI Systems Only
+- This script is designed for systems booted in UEFI mode. If using a non-UEFI (BIOS/MBR) system, modifications to the GRUB installation process are required. Refer to the [Arch Linux GRUB documentation for instructions](https://wiki.archlinux.org/title/GRUB#Master_Boot_Record_(MBR)_specific_instructions).
+- The script automatically detects and sets the system timezone using curl and ipapi.co..
+- verify `/mnt/etc/fstab` if the home partition is not present. Add manually by:
     ```bash
     blkid /home_partition
     ```
@@ -66,3 +57,16 @@ This script is for educational purposes only. It is not intended for use in a pr
     UUID=<home_partition_UUID> /home ext4 defaults 0 2
     ```
 - Save and Exit.
+## Post-Installation
+### Reboot the System
+- After the installation is complete, reboot the system
+### Optional Post-Installation Script:
+- If you chose to clone the post-installation script, it will be available in the home directory of the newly created user.
+- Execute the script to install additional packages and configure the system further
+
+## Development Status
+
+```The arch_install.sh script has been updated and is now stable. However, the post-installation script is still in development. Contributions and feedback are welcome! Please report any issues or suggest improvements by opening an issue on the GitHub repository.```
+## Acknowledgments
+- Inspired by the official [Arch Linux Installation Guide](https://wiki.archlinux.org/title/Installation_guide).
+- Thanks to the Arch Linux community for their extensive documentation and support.
