@@ -44,7 +44,8 @@ timezone_AND_keyboard_layout()
     if [[ -n $auto_timezone ]]; then
         echo "Detected timezone: $auto_timezone. Do you want to use this? (y/n)"
         read -r choice
-        if [[ $choice == "y" || $choice == "Y" ]]; then
+        choice=${choice,,}
+        if [[ $choice == "y" ]]; then
             ln -sf "/usr/share/zoneinfo/$auto_timezone" /etc/localtime
             echo "Timezone set to $auto_timezone."
         else
@@ -67,9 +68,9 @@ timezone_AND_keyboard_layout()
 }
 
 user_system_setup(){
-    echo "----------------------------------------------------------------------------------------------------------"
-    echo "---Setting up system---"
-    echo "----------------------------------------------------------------------------------------------------------"
+
+    log "Setting up system"
+
     
     echo "Enter the hostname"
     read HOSTNAME
@@ -77,28 +78,52 @@ user_system_setup(){
 echo $HOSTNAME >> /etc/hostname
 
 cat <<EOF > /etc/hosts
-127.0.0.1	localhost
-::1			localhost
-127.0.1.1	$HOSTNAME.localdomain	$HOSTNAME
+    127.0.0.1	localhost
+    ::1			localhost
+    127.0.1.1	$HOSTNAME.localdomain	$HOSTNAME
 EOF
-    
-    echo "root user password"
-    passwd
+    password(){
+        local which_user=$1
+        local temp_password
+        while true;do
+            echo "Enter the $which_user password: "
+            read -sr temp_password
+            echo "ReEnter the password:"
+            read -sr confirm_password
+            if [[ "$temp_password" == "$confirm_password" ]]; then            
+            log "Setting root password..."
+            echo -e "$temp_password\n$temp_password" | passwd $which_user
+            echo "$temp_password"  
+            return
+            else
+                echo "Error: Passwords do not match. Exiting..."
+            fi    
+        done
 
-    echo "enter the usernmae"
-    read USER  
+    }
 
+    echo "do u want root and user password same(y/n):"
+    read -s pass_choice
+    echo "enter the username"
+    read -r USER
     useradd -m $USER
     usermod -aG wheel,storage,power,audio $USER
-    passwd $USER
-    
-    
-    #editing the sudeors file to give members of wheel group to get sudo access
+    pass_choice=${pass_choice,,}
+
+    if [[ "$pass_choice" == 'y' ]];then
+        PASSWORD1=$(password "root")
+        echo -e "$PASSWORD1\n$PASSWORD1" | passwd $USER   
+    else
+        password "root"
+        password "$USER"
+    fi
+
+    log 'editing the sudeors file to give members of wheel group to get sudo access'
     sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
     
     echo "---Inittializing the bootloader---"
-    echo "----------------------------------------------------------------------------------------------------------"
-    echo "initializing grub"    
+
+    log "initializing grub"    
     
     grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
     grub-mkconfig -o /boot/grub/grub.cfg
@@ -109,24 +134,27 @@ EOF
 post_installation_needed(){    
     echo "DO U NEED TO CLONE POST INSTALLTION SCRIPT (y/n): "
     read CONFIRM_post
-    
-    if [[ $CONFIRM_post == 'y' || $CONFIRM_post == 'Y' ]]; then
+    CONFIRM_post=${CONFIRM_post,,}
+    if [[ $CONFIRM_post == 'y' ]]; then
     curl -o /home/$USER/post_installation.sh https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/post_installation.sh
     log "the post_installation script is cloned"
     log "U are safe to reboot "
-    log "---BASE INSTALLATION FINISHED---"
+    log "BASE INSTALLATION FINISHED"
     exit 1
     else
-    echo "----------------------------------------------------------------------------------------------------------"
-    echo "---BASE INSTALLATION FINISHED---"
-    echo "----------------------------------------------------------------------------------------------------------"
+    log "BASE INSTALLATION FINISHED" 
+
     echo "YOU CAN REBOOT NOW"
     fi
 }
+unmount_partion(){
+        umount -R /mnt
+    }
 install_dependencies
 timezone_AND_keyboard_layout
 user_system_setup
-# post_installation_needed
+post_installation_needed
+unmount_partion
 }
 
 main()
