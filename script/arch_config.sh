@@ -84,6 +84,7 @@ cat <<EOF > /etc/hosts
 EOF
     password(){
         local which_user=$1
+        local choice=$2
         local temp_password
         while true;do
             echo "Enter the $which_user password: "
@@ -91,10 +92,14 @@ EOF
             echo "ReEnter the password:"
             read -sr confirm_password
             if [[ "$temp_password" == "$confirm_password" ]]; then            
-            log "Setting root password..."
-            echo -e "$temp_password\n$temp_password" | passwd $which_user
-            echo "$temp_password"  
-            return
+                log "Setting password..."
+                echo -e "$temp_password\n$temp_password" | passwd "$which_user"
+            
+                if [[ "$choice" == 'y' ]]; then
+                    echo -e "$temp_password\n$temp_password" | passwd root
+                fi
+             
+                return
             else
                 echo "Error: Passwords do not match. Exiting..."
             fi    
@@ -103,16 +108,16 @@ EOF
     }
 
     echo "do u want root and user password same(y/n):"
-    read -s pass_choice
+    read -r pass_choice
+    pass_choice=${pass_choice,,}
     echo "enter the username"
     read -r USER
     useradd -m $USER
     usermod -aG wheel,storage,power,audio $USER
-    pass_choice=${pass_choice,,}
 
     if [[ "$pass_choice" == 'y' ]];then
-        PASSWORD1=$(password "root")
-        echo -e "$PASSWORD1\n$PASSWORD1" | passwd $USER   
+
+        password "$USER" "y"
     else
         password "root"
         password "$USER"
