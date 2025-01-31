@@ -141,7 +141,7 @@ post_installation_needed(){
     read CONFIRM_post
     CONFIRM_post=${CONFIRM_post,,}
     if [[ $CONFIRM_post == 'y' ]]; then
-    curl -o /home/$USER/post_installation.sh https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/post_installation.sh
+    curl -o /home/$USER/setup.sh https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/script/setup.sh
     log "the post_installation script is cloned"
     log "U are safe to reboot "
     log "BASE INSTALLATION FINISHED"

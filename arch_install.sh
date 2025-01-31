@@ -120,7 +120,6 @@ DiskOperations()
     }
 
     install_base_packages(){
-    # installing the packages 
 
     log "Installing base packages..."
     
