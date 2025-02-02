@@ -137,7 +137,7 @@ log "Preparing next stage script..."
 
 rm /var/log/myscript.log  
 log "Chrooting into the new system..."
-curl -o /mnt/arch_config.sh https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/testing/script/arch_config.sh
+curl -o /mnt/arch_config.sh https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/script/arch_config.sh
 arch-chroot /mnt sh arch_config.sh
 log "Installation complete!"
 }
