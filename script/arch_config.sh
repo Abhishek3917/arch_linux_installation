@@ -1,4 +1,4 @@
-
+#!/usr/bin/bash
 
 LOGFILE="/var/log/myscript.log"
 trap "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] ERROR on line $LINENO: Command failed\" | tee -a \"$LOGFILE\"" ERR
@@ -160,6 +160,7 @@ timezone_AND_keyboard_layout
 user_system_setup
 post_installation_needed
 unmount_partion
+rm arch_config.sh
 }
 
 main()

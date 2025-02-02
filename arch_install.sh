@@ -145,6 +145,7 @@ log "Installation complete!"
  format_and_mount
  install_base_packages
  prepare_arc_chroot
+ rm arch_install.sh
 }
  main()
  {
