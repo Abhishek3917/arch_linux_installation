@@ -32,10 +32,7 @@ echo "2.intel"
 echo "3.nvdia"
 read GRAPHICS
 
-echo "PLEASE CHOOSE UR DESKTOP ENVIRONMENT"
-echo "1.BSPWM :-is a tiling window manager that represents windows as the leaves of a full binary tree. "
-echo "2.gnome :-is a desktop environment that aims to be simple and easy to use"
-read user_input
+echo "BSPWM :-is a tiling window manager that represents windows as the leaves of a full binary tree. "
 
 if [[ $GRAPHICS == '1' ]]; then
 
@@ -55,10 +52,6 @@ else
    exit 1
 fi
 
-# Install desktop environment based on user input
-
-if [[ $user_input == '1' ]]; then
-
    sudo pacman -S xorg xorg-xinit bspwm sxhkd dmenu nitrogen picom xfce4-terminal chromium arandr --noconfirm --needed
    
    if [ ! -d .config ]; then
@@ -74,20 +67,12 @@ if [[ $user_input == '1' ]]; then
    sed -i 's/urxvt/xfce4-terminal/' .config/sxhkd/sxhkdrc
    cp /etc/X11/xinit/xinitrc .xinitrc
    sudo sed -i 's/vsync = true;/#vsync = true;/' /etc/xdg/picom.conf
-   echo "nitrogen --restore &" >> xinitrc
-   echo "xsetroot -cursor_name left_ptr" >> xinitrc
-   echo "picom -f &" >> xinitrc
-   echo "exec bspwm" >> xinitrc
+   mkdir DOWN
+   echo "nitrogen --restore &" >> .xinitrc
+   echo "xsetroot -cursor_name left_ptr" >> .xinitrc
+   echo "picom -f &" >> .xinitrc
+   echo "exec bspwm" >> .xinitrc
    
-elif [[ $user_input == '2' ]]; then
-
-   sudo pacman -S gdm gnome --noconfirm --needed
-   systemctl enable gdm
-   
-else
-   echo "INVALID OPTION. TERMINATING........."
-   exit 1
-fi
 echo "----------------------------------------------------------------------------------------------------------"
 echo "----INSTALLATION FINISHED----"
 echo "you can reboot...................."
