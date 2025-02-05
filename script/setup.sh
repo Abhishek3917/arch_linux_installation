@@ -52,7 +52,7 @@ else
    exit 1
 fi
 
-   sudo pacman -S xorg xorg-xinit bspwm sxhkd dmenu nitrogen picom xfce4-terminal chromium arandr --noconfirm --needed
+   sudo pacman -S xorg xorg-xinit bspwm sxhkd dmenu nitrogen picom xfce4-terminal arandr --noconfirm --needed
    
    if [ ! -d .config ]; then
 
@@ -65,13 +65,8 @@ fi
    cp /usr/share/doc/bspwm/examples/sxhkdrc .config/sxhkd/
 
    sed -i 's/urxvt/xfce4-terminal/' .config/sxhkd/sxhkdrc
-   cp /etc/X11/xinit/xinitrc .xinitrc
+   curl -o /home/$USER/.xinitrc https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/script/xinitrc
    sudo sed -i 's/vsync = true;/#vsync = true;/' /etc/xdg/picom.conf
-   mkdir DOWN
-   echo "nitrogen --restore &" >> .xinitrc
-   echo "xsetroot -cursor_name left_ptr" >> .xinitrc
-   echo "picom -f &" >> .xinitrc
-   echo "exec bspwm" >> .xinitrc
    
 echo "----------------------------------------------------------------------------------------------------------"
 echo "----INSTALLATION FINISHED----"

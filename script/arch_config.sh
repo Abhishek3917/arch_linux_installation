@@ -14,7 +14,7 @@ install_dependencies()
     echo "----------------------------------------------------------------------------------------------------------"
     log "Setup Dependencies"
     echo "----------------------------------------------------------------------------------------------------------"
-    pacman -S networkmanager network-manager-applet wireless_tools git reflector base-devel --noconfirm --needed
+    pacman -S networkmanager network-manager-applet wireless_tools git base-devel --noconfirm --needed
     pacman -S grub efibootmgr wpa_supplicant mtools dosfstools linux-headers less --noconfirm --needed
     echo "----------------------------------------------------------------------------------------------------------"
 }
