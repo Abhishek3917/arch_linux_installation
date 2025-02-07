@@ -36,11 +36,8 @@ Always review and understand the script before executing it on your system.
 
 7. **Post-Installation:**
     - After the base installation is complete, follow the instructions to reboot.
-    - Optionally, clone post-installation scripts and execute them as directed.
-
-## Post-Installation
-
-- this script is in its development stage 
+    - Optionally, clone setup.sh scripts and execute them as directed.
+    - setup.sh has bspwm simple base installation 
 
 ## Notes
 ### Partitioning and Formatting
@@ -66,7 +63,7 @@ Always review and understand the script before executing it on your system.
 
 ## Development Status
 
-```The arch_install.sh script has been updated and is now stable. However, the post-installation script is still in development. Contributions and feedback are welcome! Please report any issues or suggest improvements by opening an issue on the GitHub repository.```
+```The scripts has been updated and is now stable. Contributions and feedback are welcome! Please report any issues or suggest improvements by opening an issue on the GitHub repository.```
 ## Acknowledgments
 - Inspired by the official [Arch Linux Installation Guide](https://wiki.archlinux.org/title/Installation_guide).
 - Thanks to the Arch Linux community for their extensive documentation and support.
