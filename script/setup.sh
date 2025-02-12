@@ -65,7 +65,7 @@ fi
    cp /usr/share/doc/bspwm/examples/sxhkdrc .config/sxhkd/
 
    sed -i 's/urxvt/xfce4-terminal/' .config/sxhkd/sxhkdrc
-   curl -o /home/$USER/.xinitrc https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/script/xinitrc
+   curl -o /home/$USER/.xinitrc https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/script/xinitrc.txt
    sudo sed -i 's/vsync = true;/#vsync = true;/' /etc/xdg/picom.conf
    
 echo "----------------------------------------------------------------------------------------------------------"
