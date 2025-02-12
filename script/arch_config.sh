@@ -145,11 +145,15 @@ post_installation_needed(){
     log "the post_installation script is cloned"
     log "U are safe to reboot "
     log "BASE INSTALLATION FINISHED"
+    unmount_partion
+    rm arch_config.sh
     exit 1
     else
     log "BASE INSTALLATION FINISHED" 
 
     echo "YOU CAN REBOOT NOW"
+    unmount_partion
+    rm arch_config.sh
     fi
 }
 unmount_partion(){
@@ -159,8 +163,6 @@ install_dependencies
 timezone_AND_keyboard_layout
 user_system_setup
 post_installation_needed
-unmount_partion
-rm arch_config.sh
 }
 
 main()

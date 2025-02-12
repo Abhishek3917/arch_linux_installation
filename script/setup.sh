@@ -67,8 +67,12 @@ fi
    sed -i 's/urxvt/xfce4-terminal/' .config/sxhkd/sxhkdrc
    curl -o /home/$USER/.xinitrc https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/script/xinitrc.txt
    sudo sed -i 's/vsync = true;/#vsync = true;/' /etc/xdg/picom.conf
-   
+
+echo "cloning bspwm-dotfiles"
+git clone https://github.com/Abhishek3917/bspwm-dotfile.git
+sh bspwm-dotfile/setup.sh
 echo "----------------------------------------------------------------------------------------------------------"
 echo "----INSTALLATION FINISHED----"
 echo "you can reboot...................."
 echo "----------------------------------------------------------------------------------------------------------"
+rm setup.sh
