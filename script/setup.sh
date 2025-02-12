@@ -72,7 +72,6 @@ if [[ $1 == "bspwm" ]]; then
     echo "Cloning BSPWM dotfiles..."
     git clone https://github.com/Abhishek3917/bspwm-dotfile.git
 fi
-sh bspwm-dotfile/setup.sh
 echo "----------------------------------------------------------------------------------------------------------"
 echo "----INSTALLATION FINISHED----"
 echo "you can reboot...................."
