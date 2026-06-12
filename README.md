@@ -1,69 +1,377 @@
-# Arch Linux Installation Script
+# 🚀 Arch Linux Automated Installer ## 📌 Project Details
 
-This script automates the installation of base Arch Linux on systems booted in UEFI mode. It simplifies the installation process by handling partitioning, formatting, package installation, and basic system configuration.
+This project offers an interactive Bash-based installer that streamlines the Arch Linux installation process.
 
-## Security Disclaimer
+It automates basic installation activities while keeping the setup process transparent and adjustable for those that prefer greater control over their machine.
 
-Always review and understand the script before executing it on your system.
+The installer helps with:
 
-## Prerequisites
 
-1. **Boot into Arch Linux Installation Media:**
-    - Create a bootable USB or CD with the Arch Linux installation image.
-    - Boot your system from the installation media.
+* Disk preparation and mounting.
+* Basic Arch Linux installation
 
-2. **Identify Disk Partitions:**
-    - Run `fdisk -l` to list available disk partitions.
-    - Identify the target disk for installation (e.g., /dev/sdX). 
+* Bootloader configuration
 
-3. **Create Partitions:**
-    - Use a partitioning tool (e.g., cfdisk, fdisk, parted) to create partitions on the target disk.
-    - Example: Use fdisk /dev/sdX for creating partitions.
-    - Note the partition names for EFI, root, home, and swap (optional).
+* Create a user account.
 
-4. **Download the Script:**
-    ```bash
-    curl https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/arch_install.sh -o arch_install.sh
-    ```
+* Network setup.
 
-5. **Run the Script:**
-    ```bash
-    sh arch_install.sh
-    ```
+* System localization.
 
-6. **Follow the Prompts:**
-    - Respond to the prompts to provide necessary information for the installation.
+* Optional post-installation configuration.
 
-7. **Post-Installation:**
-    - After the base installation is complete, follow the instructions to reboot.
-    - Optionally, clone setup.sh scripts and execute them as directed.
-    - setup.sh has bspwm simple base installation 
+The goal of this project is to make Arch Linux installation faster and easier, particularly for those who prefer a guided setup over manually inputting each command.
 
-## Notes
-### Partitioning and Formatting
-- The script assumes that all partitions, including root and home, use the ext4 filesystem format.
-### UEFI Systems Only
-- This script is designed for systems booted in UEFI mode. If using a non-UEFI (BIOS/MBR) system, modifications to the GRUB installation process are required. Refer to the [Arch Linux GRUB documentation for instructions](https://wiki.archlinux.org/title/GRUB#Master_Boot_Record_(MBR)_specific_instructions).
-- The script automatically detects and sets the system timezone using curl and ipapi.co..
-- verify `/mnt/etc/fstab` if the home partition is not present. Add manually by:
-    ```bash
-    blkid /home_partition
-    ```
-- Add a line for the home partition using the UUID you obtained in the previous step. The line should look something like this:
-    ```bash
-    UUID=<home_partition_UUID> /home ext4 defaults 0 2
-    ```
-- Save and Exit.
-## Post-Installation
-### Reboot the System
-- After the installation is complete, reboot the system
-### Optional Post-Installation Script:
-- If you chose to clone the post-installation script, it will be available in the home directory of the newly created user.
-- Execute the script to install additional packages and configure the system further
+---
 
-## Development Status
+# ✨ Features
 
-```The scripts has been updated and is now stable. Contributions and feedback are welcome! Please report any issues or suggest improvements by opening an issue on the GitHub repository.```
-## Acknowledgments
-- Inspired by the official [Arch Linux Installation Guide](https://wiki.archlinux.org/title/Installation_guide).
-- Thanks to the Arch Linux community for their extensive documentation and support.
+## ⚡ Automated Installation
+
+The installer performs:
+
+✅ UEFI boot detection
+✅ Network connectivity check
+✅ Arch Linux environment verification
+✅ Package installation
+✅ Filesystem creation
+✅ Partition mounting
+✅ fstab generation
+
+---
+
+## 💾 Disk Management
+
+Supports:
+
+* EFI partition
+* Root partition
+* Home partition
+* Optional swap partition
+
+Example layout:
+
+```
+/dev/sda1  → EFI
+/dev/sda2  → Root
+/dev/sda3  → Home
+/dev/sda4  → Swap
+```
+
+---
+
+## 🔧 System Configuration
+
+Automatically configures:
+
+* Hostname
+* Users
+* Passwords
+* sudo permissions
+* Locale
+* Keyboard settings
+* Hardware clock
+
+---
+
+## 🥾 Bootloader Setup
+
+Installs and configures:
+
+* GRUB
+* EFI boot entry
+
+---
+
+## 🌐 Network Setup
+
+Installs and enables:
+
+* NetworkManager
+* Wireless tools
+* wpa_supplicant
+
+After reboot:
+
+```bash
+systemctl status NetworkManager
+```
+
+---
+
+# 🏗️ Project Structure
+
+```
+arch_linux_installation
+│
+├── arch_install.sh
+│
+├── script
+│   │
+│   ├── arch_config.sh
+│   │
+│   └── setup.sh
+│
+└── README.md
+```
+
+## Installation Flow
+
+```
+Live ISO
+   |
+   |
+arch_install.sh
+   |
+   |
+Partition Setup
+   |
+   |
+pacstrap Base System
+   |
+   |
+arch_config.sh
+   |
+   |
+GRUB + User Setup
+   |
+   |
+Reboot
+   |
+   |
+Optional Setup Script
+```
+
+---
+
+# ⚠️ Requirements
+
+Before running:
+
+## 1. Boot Arch Linux ISO
+
+Create a bootable USB:
+
+https://archlinux.org/download/
+
+Boot into the live environment.
+
+---
+
+## 2. Check Internet
+
+```bash
+ping google.com
+```
+
+---
+
+## 3. Create partitions
+
+Example:
+
+```bash
+fdisk -l
+```
+
+Create:
+
+* EFI partition
+* Root partition
+* Home partition (optional)
+* Swap partition (optional)
+
+---
+
+# 🚀 Usage
+
+Download installer:
+
+```bash
+curl -O https://raw.githubusercontent.com/Abhishek3917/arch_linux_installation/main/arch_install.sh
+```
+
+Make executable:
+
+```bash
+chmod +x arch_install.sh // optional as in arch_installation
+```
+
+Run:
+
+```bash
+./arch_install.sh or sh arch_install.sh
+```
+
+Follow the interactive prompts.
+
+---
+
+# 🔐 Security Warning
+
+This script performs destructive operations.
+
+It can:
+
+* Format partitions
+* Delete existing data
+* Modify bootloader
+* Create users
+
+Always:
+
+* Read the script before running
+* Verify partitions
+* Test inside a VM first
+
+---
+
+# 🧪 Testing
+
+Recommended testing environments:
+
+## VirtualBox
+
+Suggested:
+
+```
+RAM      : 2 GB+
+CPU      : 2 cores+
+Disk     : 30 GB+
+Firmware : EFI enabled
+```
+
+Enable:
+
+```
+Settings
+ → System
+ → Enable EFI
+```
+
+---
+
+# 📝 Notes
+
+## Filesystem
+
+Currently supports:
+
+```
+ext4
+```
+
+Future support planned:
+
+```
+btrfs
+xfs
+```
+
+---
+
+## UEFI Only
+
+This installer requires:
+
+```
+/sys/firmware/efi/
+```
+
+Legacy BIOS systems are not supported currently.
+
+---
+
+## Home Partition Issue
+
+If `/home` is missing from fstab:
+
+Find UUID:
+
+```bash
+blkid
+```
+
+Add:
+
+```
+UUID=<uuid> /home ext4 defaults 0 2
+```
+
+---
+
+# 🛠️ Development Status
+
+Current:
+
+```
+Version: 1.0
+Status : Stable
+```
+
+Implemented:
+
+✅ Automated Arch installation
+✅ UEFI support
+✅ GRUB setup
+✅ User creation
+✅ Network setup
+✅ Logging system
+
+---
+
+# 🗺️ Roadmap
+
+Future improvements:
+
+* [ ] Automatic partitioning option
+* [ ] Desktop environment installer
+* [ ] Backup and restore option
+* [ ] Encryption support
+* [ ] Better error recovery
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+Steps:
+
+```bash
+git clone https://github.com/Abhishek3917/arch_linux_installation.git
+
+cd arch_linux_installation
+```
+
+Create a branch:
+
+```bash
+git checkout -b feature-name
+```
+
+Commit:
+
+```bash
+git commit -m "add feature"
+```
+
+Push:
+
+```bash
+git push origin feature-name
+```
+
+Open a pull request.
+
+---
+
+# ❤️ Credits
+
+Inspired by:
+
+* Arch Linux Wiki
+* Arch Linux Community
+* Open-source Linux ecosystem
+
+---
