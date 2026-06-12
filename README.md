@@ -1,4 +1,6 @@
-# 🚀 Arch Linux Automated Installer ## 📌 Project Details
+# 🚀 Arch Linux Automated Installer 
+
+## 📌 Project Details
 
 This project offers an interactive Bash-based installer that streamlines the Arch Linux installation process.
 
