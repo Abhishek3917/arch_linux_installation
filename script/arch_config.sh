@@ -1,11 +1,16 @@
 #!/usr/bin/bash
 
-LOGFILE="/var/log/myscript.log"
-trap "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] ERROR on line $LINENO: Command failed\" | tee -a \"$LOGFILE\"" ERR
+LOGFILE="var/log/myscript.log"
+
+error_handler() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR on line $LINENO: Command failed" | tee -a "$LOGFILE"
+}
+
+trap error_handler ERR
 set -e  
 
 log() {
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOGFILE"
   }
 arch_chroot_operation()
 { local USER
@@ -32,8 +37,8 @@ timezone_AND_keyboard_layout()
             ln -sf "/usr/share/zoneinfo/$TIMEZONE" /etc/localtime
             echo "Timezone set to $TIMEZONE."
             log "timezone is saved:"
-            echo $TIMEZONE | tee -a "$LOGFILE"
         else
+            echo $TIMEZONE | tee -a "$LOGFILE"
             echo "Error: Invalid timezone. Please try again."
             set_timezone
             
@@ -163,6 +168,7 @@ install_dependencies
 timezone_AND_keyboard_layout
 user_system_setup
 post_installation_needed
+unmount_partion
 }
 
 main()
