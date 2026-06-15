@@ -37,7 +37,6 @@ timezone_AND_keyboard_layout()
             ln -sf "/usr/share/zoneinfo/$TIMEZONE" /etc/localtime
             echo "Timezone set to $TIMEZONE."
             log "timezone is saved:"
-        else
             echo $TIMEZONE | tee -a "$LOGFILE"
             echo "Error: Invalid timezone. Please try again."
             set_timezone
