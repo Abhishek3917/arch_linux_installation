@@ -38,6 +38,7 @@ timezone_AND_keyboard_layout()
             echo "Timezone set to $TIMEZONE."
             log "timezone is saved:"
             echo $TIMEZONE | tee -a "$LOGFILE"
+        else
             echo "Error: Invalid timezone. Please try again."
             set_timezone
             
