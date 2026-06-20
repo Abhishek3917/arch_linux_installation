@@ -52,7 +52,7 @@ else
    exit 1
 fi
 
-   sudo pacman -S xorg xorg-xinit bspwm sxhkd dmenu nitrogen picom xfce4-terminal arandr --noconfirm --needed
+   sudo pacman -S xorg xorg-xinit bspwm sxhkd dmenu alacritty picom arandr --noconfirm --needed
    
    if [ ! -d .config ]; then
 
