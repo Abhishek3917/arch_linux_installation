@@ -50,5 +50,7 @@ fi
 $HOME/.screenlayout/display.sh
 #picom --config $HOME/.config/picom/picom.conf &
 nitrogen --restore &
+~/.fehbg &
 xsetroot -cursor_name left_ptr
+sxhkd &
 exec bspwm
